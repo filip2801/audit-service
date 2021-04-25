@@ -8,3 +8,9 @@ create table audit
     username varchar(255) not null,
     hash     varchar(255) not null
 );
+
+create table last_hash
+(
+    id   serial primary key,
+    hash varchar(255) not null
+);

@@ -31,6 +31,10 @@ public class AuditEntity {
         this.hash = hash;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getType() {
         return type;
     }
@@ -49,5 +53,9 @@ public class AuditEntity {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getHash() {
+        return hash;
     }
 }
