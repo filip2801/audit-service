@@ -2,7 +2,7 @@ package com.filip2801.hawkai.auditservice.domain;
 
 import java.time.LocalDateTime;
 
-public class AuditDto {
+public class AuditLogDto {
 
     private final String type;
     private final String subtype;
@@ -10,7 +10,7 @@ public class AuditDto {
     private final String message;
     private final String username;
 
-    public AuditDto(String type, String subtype, LocalDateTime timestamp, String message, String username) {
+    public AuditLogDto(String type, String subtype, LocalDateTime timestamp, String message, String username) {
         this.type = type;
         this.subtype = subtype;
         this.timestamp = timestamp;

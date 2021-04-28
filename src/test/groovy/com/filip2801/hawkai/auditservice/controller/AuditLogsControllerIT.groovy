@@ -2,8 +2,8 @@ package com.filip2801.hawkai.auditservice.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.filip2801.hawkai.auditservice.IntegrationTestSpecification
-import com.filip2801.hawkai.auditservice.domain.AuditDto
-import com.filip2801.hawkai.auditservice.domain.AuditService
+import com.filip2801.hawkai.auditservice.domain.AuditLogDto
+import com.filip2801.hawkai.auditservice.domain.AuditLogService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.server.LocalServerPort
@@ -18,7 +18,7 @@ class AuditLogsControllerIT extends IntegrationTestSpecification {
     @Autowired
     RestTemplate restTemplate
     @Autowired
-    AuditService auditService
+    AuditLogService auditService
 
     @LocalServerPort
     int port
@@ -60,15 +60,15 @@ class AuditLogsControllerIT extends IntegrationTestSpecification {
         def numberOfMatchedAuditLogs = 12
         numberOfMatchedAuditLogs.times {
             def date = dateAfter.plusMinutes(new Random().nextInt(numberOfMatchedAuditLogs))
-            def auditDto = new AuditDto(type, subtype, date, UUID.randomUUID().toString(), username)
-            auditService.log(auditDto)
+            def auditDto = new AuditLogDto(type, subtype, date, UUID.randomUUID().toString(), username)
+            auditService.createLog(auditDto)
         }
 
-        def toEarly = new AuditDto(type, subtype, dateAfter.minusMinutes(10), UUID.randomUUID().toString(), username)
-        auditService.log(toEarly)
+        def toEarly = new AuditLogDto(type, subtype, dateAfter.minusMinutes(10), UUID.randomUUID().toString(), username)
+        auditService.createLog(toEarly)
 
-        def toLate = new AuditDto(type, subtype, dateAfter.plusYears(10), UUID.randomUUID().toString(), username)
-        auditService.log(toLate)
+        def toLate = new AuditLogDto(type, subtype, dateAfter.plusYears(10), UUID.randomUUID().toString(), username)
+        auditService.createLog(toLate)
 
         def dateAfterParam = toString(dateAfter)
         def dateBeforeParam = toString(dateAfter.plusMinutes(numberOfMatchedAuditLogs))

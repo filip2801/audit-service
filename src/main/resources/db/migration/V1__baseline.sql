@@ -1,4 +1,4 @@
-create table audit
+create table audit_log
 (
     id       serial primary key,
     type     text         not null,

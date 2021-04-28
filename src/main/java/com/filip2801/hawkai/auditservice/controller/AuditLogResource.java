@@ -1,11 +1,11 @@
 package com.filip2801.hawkai.auditservice.controller;
 
-import com.filip2801.hawkai.auditservice.domain.AuditEntity;
+import com.filip2801.hawkai.auditservice.domain.AuditLog;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-public class AuditResource {
+public class AuditLogResource {
 
     private Long id;
     private final String type;
@@ -14,9 +14,9 @@ public class AuditResource {
     private final String message;
     private final String username;
 
-    public AuditResource(String type, String subtype,
-                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime timestamp,
-                         String message, String username) {
+    public AuditLogResource(String type, String subtype,
+                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime timestamp,
+                            String message, String username) {
 
         this.type = type;
         this.subtype = subtype;
@@ -25,13 +25,13 @@ public class AuditResource {
         this.username = username;
     }
 
-    public AuditResource(AuditEntity auditEntity) {
-        this.id = auditEntity.getId();
-        this.type = auditEntity.getType();
-        this.subtype = auditEntity.getSubtype();
-        this.timestamp = auditEntity.getTimestamp();
-        this.message = auditEntity.getMessage();
-        this.username = auditEntity.getUsername();
+    public AuditLogResource(AuditLog auditLog) {
+        this.id = auditLog.getId();
+        this.type = auditLog.getType();
+        this.subtype = auditLog.getSubtype();
+        this.timestamp = auditLog.getTimestamp();
+        this.message = auditLog.getMessage();
+        this.username = auditLog.getUsername();
     }
 
     public Long getId() {

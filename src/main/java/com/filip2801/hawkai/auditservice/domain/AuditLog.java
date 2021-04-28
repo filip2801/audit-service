@@ -4,8 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "audit")
-public class AuditEntity {
+public class AuditLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,15 +18,15 @@ public class AuditEntity {
     private String username;
     private String hash;
 
-    protected AuditEntity() {
+    protected AuditLog() {
     }
 
-    public AuditEntity(AuditDto auditDto, String hash) {
-        this.type = auditDto.getType();
-        this.subtype = auditDto.getSubtype();
-        this.timestamp = auditDto.getTimestamp();
-        this.message = auditDto.getMessage();
-        this.username = auditDto.getUsername();
+    public AuditLog(AuditLogDto auditLogDto, String hash) {
+        this.type = auditLogDto.getType();
+        this.subtype = auditLogDto.getSubtype();
+        this.timestamp = auditLogDto.getTimestamp();
+        this.message = auditLogDto.getMessage();
+        this.username = auditLogDto.getUsername();
         this.hash = hash;
     }
 

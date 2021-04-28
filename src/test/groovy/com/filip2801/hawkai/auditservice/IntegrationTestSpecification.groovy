@@ -21,7 +21,7 @@ class IntegrationTestSpecification extends Specification {
 
     void cleanDatabase() {
         Sql sql = new Sql(dataSource)
-        sql.execute("delete from audit")
+        sql.execute("delete from audit_log")
         sql.execute("update last_hash set hash='0'")
     }
 

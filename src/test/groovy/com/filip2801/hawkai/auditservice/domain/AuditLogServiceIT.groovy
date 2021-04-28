@@ -7,11 +7,11 @@ import spock.lang.Subject
 
 import java.time.LocalDateTime
 
-class AuditServiceIT extends IntegrationTestSpecification {
+class AuditLogServiceIT extends IntegrationTestSpecification {
 
     @Subject
     @Autowired
-    AuditService auditService
+    AuditLogService auditService
 
     @Autowired
     AuditRepository auditRepository
@@ -21,10 +21,10 @@ class AuditServiceIT extends IntegrationTestSpecification {
     def "should create audit log"() {
         given:
         def message = UUID.randomUUID().toString()
-        def auditDto = new AuditDto("someType", "someSubtype", LocalDateTime.now(), message, "admin")
+        def auditDto = new AuditLogDto("someType", "someSubtype", LocalDateTime.now(), message, "admin")
 
         when:
-        auditService.log(auditDto)
+        auditService.createLog(auditDto)
 
         then:
         def foundEntries = auditRepository.findAll()
@@ -48,8 +48,8 @@ class AuditServiceIT extends IntegrationTestSpecification {
 
         when:
         messages.parallelStream().forEach {
-            def auditDto = new AuditDto("someType", "someSubtype", LocalDateTime.now(), it, "admin")
-            auditService.log(auditDto)
+            def auditDto = new AuditLogDto("someType", "someSubtype", LocalDateTime.now(), it, "admin")
+            auditService.createLog(auditDto)
         }
 
         then:

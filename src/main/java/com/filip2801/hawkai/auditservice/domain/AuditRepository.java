@@ -7,12 +7,12 @@ import org.springframework.data.repository.Repository;
 
 import java.util.List;
 
-public interface AuditRepository extends Repository<AuditEntity, Long> {
+public interface AuditRepository extends Repository<AuditLog, Long> {
 
-    AuditEntity save(AuditEntity audit);
+    AuditLog save(AuditLog audit);
 
-    List<AuditEntity> findAll();
+    List<AuditLog> findAll();
 
-    Page<AuditEntity> findAll(Specification<AuditEntity> specification, Pageable pageable);
+    Page<AuditLog> findAll(Specification<AuditLog> specification, Pageable pageable);
 
 }

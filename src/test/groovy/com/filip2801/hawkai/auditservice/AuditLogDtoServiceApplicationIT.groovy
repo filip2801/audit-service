@@ -3,7 +3,7 @@ package com.filip2801.hawkai.auditservice
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.context.WebApplicationContext
 
-class AuditDtoServiceApplicationIT extends IntegrationTestSpecification {
+class AuditLogDtoServiceApplicationIT extends IntegrationTestSpecification {
 
 	@Autowired
 	WebApplicationContext context

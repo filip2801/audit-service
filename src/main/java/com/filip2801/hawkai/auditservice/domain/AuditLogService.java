@@ -9,22 +9,22 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
-public class AuditService {
+public class AuditLogService {
 
     private final AuditRepository auditRepository;
     private final LastHashRepository lastHashRepository;
 
-    public AuditService(AuditRepository auditRepository, LastHashRepository lastHashRepository) {
+    public AuditLogService(AuditRepository auditRepository, LastHashRepository lastHashRepository) {
         this.auditRepository = auditRepository;
         this.lastHashRepository = lastHashRepository;
     }
 
     @Transactional
-    public AuditEntity log(AuditDto auditDto) {
+    public AuditLog createLog(AuditLogDto auditLogDto) {
         var lastHash = lastHashRepository.find();
-        var newHash = calculateNewHash(auditDto, lastHash.getHash());
-        var auditEntity = new AuditEntity(auditDto, newHash);
-        var createdAuditLog = auditRepository.save(auditEntity);
+        var newHash = calculateNewHash(auditLogDto, lastHash.getHash());
+        var auditLog = new AuditLog(auditLogDto, newHash);
+        var createdAuditLog = auditRepository.save(auditLog);
 
         lastHash.changeHash(newHash);
         lastHashRepository.save(lastHash);
@@ -32,12 +32,12 @@ public class AuditService {
         return createdAuditLog;
     }
 
-    private String calculateNewHash(AuditDto auditDto, String lastHash) {
-        var stringToHash = auditDto.getMessage() + lastHash;
+    private String calculateNewHash(AuditLogDto auditLogDto, String lastHash) {
+        var stringToHash = auditLogDto.getMessage() + lastHash;
         return DigestUtils.sha256Hex(stringToHash);
     }
 
-    public Page<AuditEntity> findAll(AuditLogsFilter filter, Pageable pageable) {
-        return auditRepository.findAll(new AuditEntitySpecification(filter), pageable);
+    public Page<AuditLog> findAll(AuditLogsFilter filter, Pageable pageable) {
+        return auditRepository.findAll(new AuditLogSpecification(filter), pageable);
     }
 }

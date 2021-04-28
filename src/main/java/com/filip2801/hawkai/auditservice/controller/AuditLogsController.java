@@ -1,7 +1,7 @@
 package com.filip2801.hawkai.auditservice.controller;
 
-import com.filip2801.hawkai.auditservice.domain.AuditDto;
-import com.filip2801.hawkai.auditservice.domain.AuditService;
+import com.filip2801.hawkai.auditservice.domain.AuditLogDto;
+import com.filip2801.hawkai.auditservice.domain.AuditLogService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auditlogs")
 public class AuditLogsController {
 
-    private final AuditService auditService;
+    private final AuditLogService auditLogService;
 
-    public AuditLogsController(AuditService auditService) {
-        this.auditService = auditService;
+    public AuditLogsController(AuditLogService auditLogService) {
+        this.auditLogService = auditLogService;
     }
 
     @PostMapping
-    AuditResource createAuditLog(@RequestBody AuditResource resource) {
-        var dto = new AuditDto(resource.getType(), resource.getSubtype(), resource.getTimestamp(), resource.getMessage(), resource.getUsername());
-        var createdAuditLog = auditService.log(dto);
+    AuditLogResource createAuditLog(@RequestBody AuditLogResource resource) {
+        var dto = new AuditLogDto(resource.getType(), resource.getSubtype(), resource.getTimestamp(), resource.getMessage(), resource.getUsername());
+        var createdAuditLog = auditLogService.createLog(dto);
 
-        return new AuditResource(createdAuditLog);
+        return new AuditLogResource(createdAuditLog);
     }
 
     @GetMapping
-    Page<AuditResource> findAuditLogs(AuditLogsFilter filter, Pageable pageable) {
-        return auditService.findAll(filter, pageable).map(AuditResource::new);
+    Page<AuditLogResource> findAuditLogs(AuditLogsFilter filter, Pageable pageable) {
+        return auditLogService.findAll(filter, pageable).map(AuditLogResource::new);
     }
 }

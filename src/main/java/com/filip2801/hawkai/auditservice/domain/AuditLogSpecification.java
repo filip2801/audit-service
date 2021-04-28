@@ -10,16 +10,16 @@ import javax.persistence.criteria.Root;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AuditEntitySpecification implements Specification<AuditEntity> {
+public class AuditLogSpecification implements Specification<AuditLog> {
 
     private final AuditLogsFilter filter;
 
-    public AuditEntitySpecification(AuditLogsFilter filter) {
+    public AuditLogSpecification(AuditLogsFilter filter) {
         this.filter = filter;
     }
 
     @Override
-    public Predicate toPredicate(Root<AuditEntity> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+    public Predicate toPredicate(Root<AuditLog> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         Set<Predicate> predicates = new HashSet<>();
         if (filter.getType() != null) {
             predicates.add(builder.equal(root.get("type"), filter.getType()));
