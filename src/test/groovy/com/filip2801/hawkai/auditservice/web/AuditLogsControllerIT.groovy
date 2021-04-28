@@ -51,6 +51,37 @@ class AuditLogsControllerIT extends IntegrationTestSpecification {
         response.body.username == requestPayload.username
     }
 
+    def "should fetch list with created audit log"() {
+        given:
+        def requestPayload = [
+                type     : 'some type',
+                subtype  : 'some subtype',
+                message  : 'something happened',
+                timestamp: '2020-11-25T15:30:44',
+                username : 'admin'
+        ]
+
+        restTemplate.postForEntity(getBaseUrl(), requestPayload, HashMap)
+
+        when:
+        def auditLogsPage = restTemplate.getForObject(getBaseUrl() + "?page=0&size=10", HashMap)
+
+        then:
+        auditLogsPage.totalElements == 1
+        auditLogsPage.totalPages == 1
+        auditLogsPage.pageable.pageNumber == 0
+        auditLogsPage.content.size() == 1
+
+        and:
+        def auditLog = auditLogsPage.content.first()
+        auditLog.id
+        auditLog.type == requestPayload.type
+        auditLog.subtype == requestPayload.subtype
+        auditLog.message == requestPayload.message
+        auditLog.timestamp == requestPayload.timestamp
+        auditLog.username == requestPayload.username
+    }
+
     def "should fetch audit logs"() {
         given:
         def type = UUID.randomUUID().toString()
