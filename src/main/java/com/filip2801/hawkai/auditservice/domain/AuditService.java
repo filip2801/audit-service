@@ -1,6 +1,9 @@
 package com.filip2801.hawkai.auditservice.domain;
 
+import com.filip2801.hawkai.auditservice.controller.AuditLogsFilter;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,5 +33,9 @@ public class AuditService {
     private String calculateNewHash(AuditDto auditDto, String lastHash) {
         var stringToHash = auditDto.getMessage() + lastHash;
         return DigestUtils.sha256Hex(stringToHash);
+    }
+
+    public Page<AuditEntity> findAll(AuditLogsFilter filter, Pageable pageable) {
+        return auditRepository.findAll(new AuditEntitySpecification(filter), pageable);
     }
 }

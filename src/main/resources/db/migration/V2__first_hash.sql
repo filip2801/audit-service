@@ -1,2 +1,2 @@
 insert into last_hash (hash)
-values ('');
+values ('0');
