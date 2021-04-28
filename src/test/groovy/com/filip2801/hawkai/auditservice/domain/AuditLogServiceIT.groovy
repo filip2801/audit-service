@@ -63,6 +63,7 @@ class AuditLogServiceIT extends IntegrationTestSpecification {
 
             assert currentEntry.id > previousEntry.id
             assert currentEntry.hash == DigestUtils.sha256Hex(currentEntry.message + previousEntry.hash)
+            assert currentEntry.previousHash == previousEntry.hash
         }
 
         and:

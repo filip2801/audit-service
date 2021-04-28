@@ -1,5 +1,7 @@
 package com.filip2801.hawkai.auditservice.domain;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -17,17 +19,19 @@ public class AuditLog {
     private String message;
     private String username;
     private String hash;
+    private String previousHash;
 
     protected AuditLog() {
     }
 
-    public AuditLog(AuditLogDto auditLogDto, String hash) {
+    public AuditLog(AuditLogDto auditLogDto, String previousHash) {
         this.type = auditLogDto.getType();
         this.subtype = auditLogDto.getSubtype();
         this.timestamp = auditLogDto.getTimestamp();
         this.message = auditLogDto.getMessage();
         this.username = auditLogDto.getUsername();
-        this.hash = hash;
+        this.previousHash = previousHash;
+        this.hash = calculateHash(message, previousHash);
     }
 
     public Long getId() {
@@ -56,5 +60,14 @@ public class AuditLog {
 
     public String getHash() {
         return hash;
+    }
+
+    public String getPreviousHash() {
+        return previousHash;
+    }
+
+    private String calculateHash(String message, String lastHash) {
+        var stringToHash = message + lastHash;
+        return DigestUtils.sha256Hex(stringToHash);
     }
 }

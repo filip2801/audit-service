@@ -22,19 +22,13 @@ public class AuditLogService {
     @Transactional
     public AuditLog createLog(AuditLogDto auditLogDto) {
         var lastHash = lastHashRepository.find();
-        var newHash = calculateNewHash(auditLogDto, lastHash.getHash());
-        var auditLog = new AuditLog(auditLogDto, newHash);
+        var auditLog = new AuditLog(auditLogDto, lastHash.getHash());
         var createdAuditLog = auditRepository.save(auditLog);
 
-        lastHash.changeHash(newHash);
+        lastHash.changeHash(auditLog.getHash());
         lastHashRepository.save(lastHash);
 
         return createdAuditLog;
-    }
-
-    private String calculateNewHash(AuditLogDto auditLogDto, String lastHash) {
-        var stringToHash = auditLogDto.getMessage() + lastHash;
-        return DigestUtils.sha256Hex(stringToHash);
     }
 
     public Page<AuditLog> findAll(AuditLogsFilter filter, Pageable pageable) {
