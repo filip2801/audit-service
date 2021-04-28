@@ -1,4 +1,4 @@
-package com.filip2801.hawkai.auditservice.controller
+package com.filip2801.hawkai.auditservice.web
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.filip2801.hawkai.auditservice.IntegrationTestSpecification

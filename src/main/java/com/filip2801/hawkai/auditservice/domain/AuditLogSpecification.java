@@ -1,6 +1,6 @@
 package com.filip2801.hawkai.auditservice.domain;
 
-import com.filip2801.hawkai.auditservice.controller.AuditLogsFilter;
+import com.filip2801.hawkai.auditservice.web.AuditLogsFilter;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;

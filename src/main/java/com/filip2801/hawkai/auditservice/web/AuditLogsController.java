@@ -1,4 +1,4 @@
-package com.filip2801.hawkai.auditservice.controller;
+package com.filip2801.hawkai.auditservice.web;
 
 import com.filip2801.hawkai.auditservice.domain.AuditLogDto;
 import com.filip2801.hawkai.auditservice.domain.AuditLogService;

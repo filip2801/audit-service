@@ -1,7 +1,6 @@
 package com.filip2801.hawkai.auditservice.domain;
 
-import com.filip2801.hawkai.auditservice.controller.AuditLogsFilter;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.filip2801.hawkai.auditservice.web.AuditLogsFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
