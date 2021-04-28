@@ -1,5 +1,5 @@
 spring:
   datasurce:
-    url: jdbc:postgresql://fka-postgres.postgres.database.azure.com:5432
+    url: jdbc:postgresql://localhost:5432
     username: username
     password: <secret>
