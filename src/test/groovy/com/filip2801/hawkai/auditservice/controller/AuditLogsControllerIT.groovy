@@ -7,6 +7,7 @@ import com.filip2801.hawkai.auditservice.domain.AuditService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.http.HttpStatus
 import org.springframework.web.client.RestTemplate
 
 import java.time.LocalDateTime
@@ -26,6 +27,29 @@ class AuditLogsControllerIT extends IntegrationTestSpecification {
 
     @Autowired
     ObjectMapper objectMapper
+
+    def "should create audit log"() {
+        given:
+        def requestPayload = [
+                type     : 'some type',
+                subtype  : 'some subtype',
+                message  : 'something happened',
+                timestamp: '2020-11-25T15:30:44',
+                username : 'admin'
+        ]
+
+        when:
+        def response = restTemplate.postForEntity(getBaseUrl(), requestPayload, HashMap)
+
+        then:
+        response.statusCode == HttpStatus.OK
+        response.body.id
+        response.body.type == requestPayload.type
+        response.body.subtype == requestPayload.subtype
+        response.body.message == requestPayload.message
+        response.body.timestamp == requestPayload.timestamp
+        response.body.username == requestPayload.username
+    }
 
     def "should fetch audit logs"() {
         given:
@@ -78,7 +102,7 @@ class AuditLogsControllerIT extends IntegrationTestSpecification {
         }
     }
 
-    private GString getBaseUrl() {
+    private String getBaseUrl() {
         "http://localhost:${port}${contextPath}/auditlogs"
     }
 

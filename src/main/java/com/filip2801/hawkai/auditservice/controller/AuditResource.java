@@ -1,17 +1,29 @@
 package com.filip2801.hawkai.auditservice.controller;
 
 import com.filip2801.hawkai.auditservice.domain.AuditEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 public class AuditResource {
 
     private Long id;
-    private String type;
-    private String subtype;
-    private LocalDateTime timestamp;
-    private String message;
-    private String username;
+    private final String type;
+    private final String subtype;
+    private final LocalDateTime timestamp;
+    private final String message;
+    private final String username;
+
+    public AuditResource(String type, String subtype,
+                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime timestamp,
+                         String message, String username) {
+
+        this.type = type;
+        this.subtype = subtype;
+        this.timestamp = timestamp;
+        this.message = message;
+        this.username = username;
+    }
 
     public AuditResource(AuditEntity auditEntity) {
         this.id = auditEntity.getId();

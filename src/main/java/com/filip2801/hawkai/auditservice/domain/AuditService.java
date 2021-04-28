@@ -20,14 +20,16 @@ public class AuditService {
     }
 
     @Transactional
-    public void log(AuditDto auditDto) {
+    public AuditEntity log(AuditDto auditDto) {
         var lastHash = lastHashRepository.find();
         var newHash = calculateNewHash(auditDto, lastHash.getHash());
         var auditEntity = new AuditEntity(auditDto, newHash);
-        auditRepository.save(auditEntity);
+        var createdAuditLog = auditRepository.save(auditEntity);
 
         lastHash.changeHash(newHash);
         lastHashRepository.save(lastHash);
+
+        return createdAuditLog;
     }
 
     private String calculateNewHash(AuditDto auditDto, String lastHash) {

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface AuditRepository extends Repository<AuditEntity, Long> {
 
-    void save(AuditEntity audit);
+    AuditEntity save(AuditEntity audit);
 
     List<AuditEntity> findAll();
 
