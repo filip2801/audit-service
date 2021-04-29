@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.filip2801.hawkai.auditservice.IntegrationTestSpecification
 import com.filip2801.hawkai.auditservice.domain.AuditLogDto
 import com.filip2801.hawkai.auditservice.domain.AuditLogService
+import groovy.sql.Sql
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.server.LocalServerPort
@@ -133,6 +134,35 @@ class AuditLogsControllerIT extends IntegrationTestSpecification {
         }
     }
 
+    def "should check that data was not tampered"() {
+        given:
+        5.times {
+            def auditDto = new AuditLogDto("type", "subtype", LocalDateTime.now(), UUID.randomUUID().toString(), "admin")
+            auditService.createLog(auditDto)
+        }
+
+        when:
+        def auditLogHealth = restTemplate.getForObject(getBaseUrl() + "/health", HashMap)
+
+        then:
+        auditLogHealth.status == "OK"
+    }
+
+    def "should check that data was tampered"() {
+        given:
+        5.times {
+            def auditDto = new AuditLogDto("type", "subtype", LocalDateTime.now(), UUID.randomUUID().toString(), "admin")
+            auditService.createLog(auditDto)
+        }
+        updateMessageInOneOfAudiLog()
+
+        when:
+        def auditLogHealth = restTemplate.getForObject(getBaseUrl() + "/health", HashMap)
+
+        then:
+        auditLogHealth.status == "TAMPERED"
+    }
+
     private String getBaseUrl() {
         "http://localhost:${port}${contextPath}/auditlogs"
     }
@@ -143,5 +173,10 @@ class AuditLogsControllerIT extends IntegrationTestSpecification {
 
     private String toString(LocalDateTime date) {
         return DateTimeFormatter.ISO_DATE_TIME.format(date)
+    }
+
+    void updateMessageInOneOfAudiLog() {
+        Sql sql = new Sql(dataSource)
+        sql.execute("update audit_log set message='changed message'")
     }
 }

@@ -66,8 +66,13 @@ public class AuditLog {
         return previousHash;
     }
 
-    private String calculateHash(String message, String lastHash) {
-        var stringToHash = message + lastHash;
+    public boolean isTampered(String previousHashToCheck) {
+        return !this.previousHash.equals(previousHashToCheck)
+                || !this.hash.equals(calculateHash(this.message, previousHashToCheck));
+    }
+
+    private String calculateHash(String message, String previousHash) {
+        var stringToHash = message + previousHash;
         return DigestUtils.sha256Hex(stringToHash);
     }
 }

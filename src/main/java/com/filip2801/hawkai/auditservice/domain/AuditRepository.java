@@ -13,6 +13,8 @@ public interface AuditRepository extends Repository<AuditLog, Long> {
 
     List<AuditLog> findAll();
 
+    List<AuditLog> findAllByOrderById();
+
     Page<AuditLog> findAll(Specification<AuditLog> specification, Pageable pageable);
 
 }

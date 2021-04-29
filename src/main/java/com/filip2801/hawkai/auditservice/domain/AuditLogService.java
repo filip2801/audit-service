@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 @Service
 public class AuditLogService {
 
+    private static final String FIRST_HASH = "0";
+
     private final AuditRepository auditRepository;
     private final LastHashRepository lastHashRepository;
 
@@ -32,5 +34,22 @@ public class AuditLogService {
 
     public Page<AuditLog> findAll(AuditLogsFilter filter, Pageable pageable) {
         return auditRepository.findAll(new AuditLogSpecification(filter), pageable);
+    }
+
+    public boolean isLogTrailTampered() {
+        var auditLogs = auditRepository.findAllByOrderById();
+        if (auditLogs.isEmpty()) {
+            return false;
+        }
+
+        var previousHash = FIRST_HASH;
+        for (AuditLog auditLog : auditLogs) {
+            if (auditLog.isTampered(previousHash)) {
+                return true;
+            }
+            previousHash = auditLog.getHash();
+        }
+
+        return false;
     }
 }

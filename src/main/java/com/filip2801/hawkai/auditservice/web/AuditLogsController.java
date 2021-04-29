@@ -28,4 +28,15 @@ public class AuditLogsController {
     Page<AuditLogResource> findAuditLogs(AuditLogsFilter filter, Pageable pageable) {
         return auditLogService.findAll(filter, pageable).map(AuditLogResource::new);
     }
+
+    @GetMapping("/health")
+    AuditLogHealthResource getHealth() {
+        boolean isTampered = auditLogService.isLogTrailTampered();
+        if (isTampered) {
+            return AuditLogHealthResource.tampered();
+        } else {
+            return AuditLogHealthResource.ok();
+        }
+    }
+
 }
