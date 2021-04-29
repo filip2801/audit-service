@@ -31,7 +31,7 @@ public class AuditLog {
         this.message = auditLogDto.getMessage();
         this.username = auditLogDto.getUsername();
         this.previousHash = previousHash;
-        this.hash = calculateHash(message, previousHash);
+        this.hash = calculateHash();
     }
 
     public Long getId() {
@@ -68,11 +68,16 @@ public class AuditLog {
 
     public boolean isTampered(String previousHashToCheck) {
         return !this.previousHash.equals(previousHashToCheck)
-                || !this.hash.equals(calculateHash(this.message, previousHashToCheck));
+                || !this.hash.equals(calculateHash());
     }
 
-    private String calculateHash(String message, String previousHash) {
-        var stringToHash = message + previousHash;
+    private String calculateHash() {
+        var stringToHash = type +
+                subtype +
+                message +
+                timestamp +
+                username +
+                previousHash;
         return DigestUtils.sha256Hex(stringToHash);
     }
 }

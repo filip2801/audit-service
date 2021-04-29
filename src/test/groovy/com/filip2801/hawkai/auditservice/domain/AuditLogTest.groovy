@@ -7,10 +7,12 @@ import java.time.LocalDateTime
 
 class AuditLogTest extends Specification {
 
+    private static SOME_DATE = LocalDateTime.of(2020, 10, 15, 16, 35)
+
     @Unroll
     def "should create audit log"() {
         given:
-        def dto = new AuditLogDto("someType", "someSubtype", LocalDateTime.now(), "message", "admin")
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
 
         when:
         def auditLog = new AuditLog(dto, previousHash)
@@ -20,29 +22,23 @@ class AuditLogTest extends Specification {
 
         where:
         previousHash                                                       || newHash
-        '0'                                                                || 'e45637e1101eeed641a96fa5896bd900a577f9abde3ecc59aaf6298c2a9d1444'
-        'e45637e1101eeed641a96fa5896bd900a577f9abde3ecc59aaf6298c2a9d1444' || '4b97af5b1028552675c891e25dc408f713aade134acbbf95e81fbcb2d8aa67e2'
+        '0'                                                                || '0dbb1cec11022a771bf64872149fdb72ecaf0a14704d8cd9f6002bfa89691a07'
+        'e45637e1101eeed641a96fa5896bd900a577f9abde3ecc59aaf6298c2a9d1444' || '65027d270fa57006b91719d0ae1f34a28b8534038c81730da1fb4223a4150dc9'
     }
 
-    def "should not be marked as tampered when message, hash and previousHash was not changed"() {
+    def "should not be marked as tampered when nothing has changed"() {
         given:
-        def dto = new AuditLogDto("someType", "someSubtype", LocalDateTime.now(), "message", "admin")
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
         def previousHash = 'xyz'
         def auditLog = new AuditLog(dto, previousHash)
 
-        when:
-        auditLog.type = UUID.randomUUID().toString()
-        auditLog.subtype = UUID.randomUUID().toString()
-        auditLog.timestamp = LocalDateTime.now().plusMinutes(1)
-        auditLog.username = UUID.randomUUID().toString()
-
-        then:
+        expect:
         !auditLog.isTampered(previousHash)
     }
 
     def "should change previous hash and check that log is tampered"() {
         given:
-        def dto = new AuditLogDto("someType", "someSubtype", LocalDateTime.now(), "message", "admin")
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
         def previousHash = 'xyz'
         def auditLog = new AuditLog(dto, 'xyz')
 
@@ -53,9 +49,48 @@ class AuditLogTest extends Specification {
         auditLog.isTampered(previousHash)
     }
 
+    def "should change type and check that log is tampered"() {
+        given:
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
+        def previousHash = 'xyz'
+        def auditLog = new AuditLog(dto, 'xyz')
+
+        when:
+        auditLog.type = 'changed type'
+
+        then:
+        auditLog.isTampered(previousHash)
+    }
+
+    def "should change subtype and check that log is tampered"() {
+        given:
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
+        def previousHash = 'xyz'
+        def auditLog = new AuditLog(dto, 'xyz')
+
+        when:
+        auditLog.subtype = 'changed subtype'
+
+        then:
+        auditLog.isTampered(previousHash)
+    }
+
+    def "should change timestamp and check that log is tampered"() {
+        given:
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
+        def previousHash = 'xyz'
+        def auditLog = new AuditLog(dto, 'xyz')
+
+        when:
+        auditLog.timestamp = LocalDateTime.now()
+
+        then:
+        auditLog.isTampered(previousHash)
+    }
+
     def "should change message and check that log is tampered"() {
         given:
-        def dto = new AuditLogDto("someType", "someSubtype", LocalDateTime.now(), "message", "admin")
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
         def previousHash = 'xyz'
         def auditLog = new AuditLog(dto, 'xyz')
 
@@ -66,9 +101,22 @@ class AuditLogTest extends Specification {
         auditLog.isTampered(previousHash)
     }
 
+    def "should change username and check that log is tampered"() {
+        given:
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
+        def previousHash = 'xyz'
+        def auditLog = new AuditLog(dto, 'xyz')
+
+        when:
+        auditLog.username = 'changedUser'
+
+        then:
+        auditLog.isTampered(previousHash)
+    }
+
     def "should change hash and check that log is tampered"() {
         given:
-        def dto = new AuditLogDto("someType", "someSubtype", LocalDateTime.now(), "message", "admin")
+        def dto = new AuditLogDto("someType", "someSubtype", SOME_DATE, "message", "admin")
         def previousHash = 'xyz'
         def auditLog = new AuditLog(dto, 'xyz')
 
